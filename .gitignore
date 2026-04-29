@@ -4,3 +4,4 @@ __pycache__/
 .env
 explore_bq.py
 check_amounts.py
+.vercel
