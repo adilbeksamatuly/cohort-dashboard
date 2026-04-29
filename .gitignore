@@ -1,0 +1,6 @@
+bq_key.json
+__pycache__/
+*.pyc
+.env
+explore_bq.py
+check_amounts.py
