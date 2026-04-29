@@ -204,35 +204,61 @@ HTML = f"""<!DOCTYPE html>
 <style>
   *{{box-sizing:border-box;margin:0;padding:0}}
   body{{font-family:'Inter',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}}
-  .header{{background:#1e293b;border-bottom:1px solid #334155;padding:20px 32px;display:flex;align-items:center;gap:12px}}
-  .header h1{{font-size:22px;font-weight:700;color:#f8fafc}}
-  .header .badge{{background:#3b82f6;color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px}}
-  .container{{max-width:1600px;margin:0 auto;padding:24px 32px}}
-  .kpi-grid{{display:grid;grid-template-columns:repeat(7,1fr);gap:16px;margin-bottom:28px}}
-  .kpi{{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px}}
-  .kpi .label{{font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}}
-  .kpi .value{{font-size:26px;font-weight:700;color:#f8fafc}}
-  .kpi .sub{{font-size:12px;color:#64748b;margin-top:4px}}
+  .header{{background:#1e293b;border-bottom:1px solid #334155;padding:16px 20px;display:flex;align-items:center;gap:12px}}
+  .header h1{{font-size:18px;font-weight:700;color:#f8fafc}}
+  .header .badge{{background:#3b82f6;color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap}}
+  .container{{max-width:1600px;margin:0 auto;padding:16px 20px}}
+  .kpi-grid{{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:24px}}
+  .kpi{{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px}}
+  .kpi .label{{font-size:10px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}}
+  .kpi .value{{font-size:22px;font-weight:700;color:#f8fafc}}
+  .kpi .sub{{font-size:11px;color:#64748b;margin-top:4px}}
   .kpi.green .value{{color:#22c55e}}
   .kpi.blue  .value{{color:#3b82f6}}
   .kpi.amber .value{{color:#f59e0b}}
-  .charts-row{{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px}}
-  .card{{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px}}
-  .card h2{{font-size:15px;font-weight:600;color:#f8fafc;margin-bottom:20px}}
-  .card .subtitle{{font-size:12px;color:#64748b;margin-top:-16px;margin-bottom:20px}}
+  .charts-row{{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}}
+  .card{{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px}}
+  .card h2{{font-size:14px;font-weight:600;color:#f8fafc;margin-bottom:16px}}
+  .card .subtitle{{font-size:11px;color:#64748b;margin-top:-12px;margin-bottom:16px}}
   .chart-wrap{{position:relative}}
-  .section-title{{font-size:17px;font-weight:700;color:#f8fafc;margin:28px 0 16px}}
 
   /* Heatmap */
-  .heatmap-wrap{{overflow-x:auto}}
-  table.heatmap{{border-collapse:collapse;font-size:12px;width:100%}}
-  table.heatmap th{{background:#0f172a;color:#64748b;font-weight:600;padding:8px 10px;text-align:center;white-space:nowrap;position:sticky;top:0}}
+  .heatmap-wrap{{overflow-x:auto;-webkit-overflow-scrolling:touch}}
+  table.heatmap{{border-collapse:collapse;font-size:11px;width:100%}}
+  table.heatmap th{{background:#0f172a;color:#64748b;font-weight:600;padding:7px 8px;text-align:center;white-space:nowrap;position:sticky;top:0;z-index:1}}
   table.heatmap th.left{{text-align:left}}
-  table.heatmap td{{padding:6px 8px;text-align:center;border:1px solid #1e293b;min-width:70px}}
-  table.heatmap td.meta{{text-align:left;color:#94a3b8;white-space:nowrap;font-weight:500;min-width:90px;background:#1e293b}}
+  table.heatmap td{{padding:5px 6px;text-align:center;border:1px solid #1e293b;min-width:62px}}
+  table.heatmap td.meta{{text-align:left;color:#94a3b8;white-space:nowrap;font-weight:500;min-width:80px;background:#1e293b;position:sticky;left:0;z-index:1}}
   table.heatmap td.meta span{{display:block;font-size:10px;color:#475569}}
   .pct-label{{font-size:10px;opacity:.8}}
-  .charts-bottom{{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px}}
+  .charts-bottom{{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}}
+
+  /* ── Mobile ── */
+  @media(max-width:767px){{
+    .header{{padding:12px 16px}}
+    .header h1{{font-size:15px}}
+    .container{{padding:12px 16px}}
+    .kpi-grid{{grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}}
+    .kpi{{padding:12px}}
+    .kpi .value{{font-size:18px}}
+    .kpi .label{{font-size:9px}}
+    .charts-row{{grid-template-columns:1fr;gap:12px;margin-bottom:12px}}
+    .charts-bottom{{grid-template-columns:1fr;gap:12px}}
+    .card{{padding:14px;border-radius:10px}}
+    .card h2{{font-size:13px;margin-bottom:12px}}
+    .card .subtitle{{font-size:10px;margin-bottom:12px}}
+    table.heatmap{{font-size:10px}}
+    table.heatmap th{{padding:5px 6px;font-size:10px}}
+    table.heatmap td{{padding:4px 4px;min-width:52px}}
+    table.heatmap td.meta{{min-width:68px;font-size:10px}}
+    .pct-label{{font-size:9px}}
+  }}
+
+  /* ── Tablet ── */
+  @media(min-width:768px) and (max-width:1199px){{
+    .kpi-grid{{grid-template-columns:repeat(4,1fr)}}
+    .charts-row{{grid-template-columns:1fr}}
+  }}
 </style>
 </head>
 <body>
