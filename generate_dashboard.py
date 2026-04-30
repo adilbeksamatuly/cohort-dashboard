@@ -70,7 +70,7 @@ total_gross_rev = sum(
 MAX_MONTHS = 23
 
 # Minimum % of CAC that must be recovered by each month for Net Revenue Heatmap
-THRESHOLDS = {1: 85, 2: 100, 3: 115, 4: 125, 5: 130, 6: 135}
+THRESHOLDS = {0: 55, 1: 73, 2: 82, 3: 91, 4: 95, 5: 98}
 
 today = date.today()
 CURRENT_YEAR_MONTH = (today.year, today.month)
@@ -172,6 +172,22 @@ def build_heatmap_rows_total_gross(cd):
             'cells': cells,
         })
     return rows
+
+def render_threshold_bar(thresholds):
+    months = sorted(thresholds.keys())
+    out  = '    <div style="overflow-x:auto;margin-bottom:12px">\n'
+    out += '      <table style="border-collapse:collapse;font-size:12px">\n'
+    out += '        <tr>\n'
+    for m in months:
+        out += f'          <th style="padding:6px 14px;color:#94a3b8;font-weight:600;text-align:center;border:1px solid #334155;background:#0f172a">M{m}</th>\n'
+    out += '        </tr>\n'
+    out += '        <tr>\n'
+    for m in months:
+        out += f'          <td style="padding:7px 14px;text-align:center;font-weight:700;color:#ef4444;border:1px solid #334155;background:#1a0808">{thresholds[m]}.00%</td>\n'
+    out += '        </tr>\n'
+    out += '      </table>\n'
+    out += '    </div>\n'
+    return out
 
 heatmap_rows_net         = build_heatmap_rows_cac(cohort_data)
 heatmap_rows_gross       = build_heatmap_rows_gross_per_user(cohort_data_gross)
@@ -407,7 +423,8 @@ HTML += f"""
   <div class="card">
     <h2>Net Revenue Heatmap — Cumulative Net Revenue per User vs CAC</h2>
     <p class="subtitle">Net revenue (after fees & chargebacks) per acquired user. Color = % of CAC recovered (white → green = 0% → 100%+). Red = below minimum threshold.</p>
-{render_heatmap_table(heatmap_rows_net, MAX_MONTHS, thresholds=THRESHOLDS)}  </div>
+    <div style="margin-bottom:4px;font-size:11px;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:.05em">Minimum thresholds</div>
+{render_threshold_bar(THRESHOLDS)}{render_heatmap_table(heatmap_rows_net, MAX_MONTHS, thresholds=THRESHOLDS)}  </div>
 
   <!-- LTV Curves + Payback -->
   <div class="charts-bottom">
