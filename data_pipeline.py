@@ -11,9 +11,10 @@ import pandas as pd
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
-PROJECT = "hopeful-list-429812-f3"
-DATASET = "performance_analytics"
-OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+PROJECT    = "hopeful-list-429812-f3"
+DATASET    = "performance_analytics"
+OUT_DIR    = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+CACHE_FILE = os.path.join(OUT_DIR, "payments_cache.parquet")
 
 os.makedirs(OUT_DIR, exist_ok=True)
 
@@ -27,11 +28,30 @@ else:
     creds = service_account.Credentials.from_service_account_file(KEY_PATH)
 client = bigquery.Client(project=PROJECT, credentials=creds)
 
-# ── 1. Load payments ─────────────────────────────────────────────────────────
-print("Loading payments table (438K rows)...")
+# ── 1. Load payments (incremental via parquet cache) ─────────────────────────
 payments_ref = client.get_table(f"{PROJECT}.{DATASET}.all_payments_daily")
-df = client.list_rows(payments_ref).to_dataframe()
-print(f"  Loaded {len(df):,} rows")
+total_rows   = payments_ref.num_rows
+
+if os.path.exists(CACHE_FILE):
+    print("Loading cached payments...")
+    df_cached    = pd.read_parquet(CACHE_FILE)
+    cached_rows  = len(df_cached)
+    new_count    = total_rows - cached_rows
+    if new_count > 0:
+        print(f"  Cache: {cached_rows:,} rows — downloading {new_count:,} new rows...")
+        df_new = client.list_rows(
+            payments_ref, start_index=cached_rows, max_results=new_count
+        ).to_dataframe()
+        df = pd.concat([df_cached, df_new], ignore_index=True)
+    else:
+        print(f"  Cache up to date ({cached_rows:,} rows), no new data.")
+        df = df_cached
+else:
+    print(f"No cache — downloading all {total_rows:,} rows...")
+    df = client.list_rows(payments_ref).to_dataframe()
+
+df.to_parquet(CACHE_FILE, index=False)
+print(f"  Cache saved: {len(df):,} rows")
 
 # ── 2. Load spends ────────────────────────────────────────────────────────────
 print("Loading spends table...")
