@@ -1,6 +1,6 @@
 """Generates a self-contained index.html dashboard from pre-computed JSON data."""
 import json, os
-from datetime import date
+from datetime import date, datetime, timezone
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(BASE, "data")
@@ -74,6 +74,7 @@ THRESHOLDS = {0: 55, 1: 73, 2: 82, 3: 91, 4: 95, 5: 98}
 
 today = date.today()
 CURRENT_YEAR_MONTH = (today.year, today.month)
+UPDATED_AT = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
 def month_has_occurred(cohort_str, offset):
     """True if cohort_month + offset months <= current month."""
@@ -224,7 +225,7 @@ HTML = f"""<!DOCTYPE html>
 <style>
   *{{box-sizing:border-box;margin:0;padding:0}}
   body{{font-family:'Inter',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}}
-  .header{{background:#1e293b;border-bottom:1px solid #334155;padding:16px 20px;display:flex;align-items:center;gap:12px}}
+  .header{{background:#1e293b;border-bottom:1px solid #334155;padding:16px 20px;display:flex;align-items:center;gap:12px;justify-content:space-between}}
   .header h1{{font-size:18px;font-weight:700;color:#f8fafc}}
   .header .badge{{background:#3b82f6;color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap}}
   .container{{max-width:1600px;margin:0 auto;padding:16px 20px}}
@@ -283,10 +284,14 @@ HTML = f"""<!DOCTYPE html>
 </head>
 <body>
 <div class="header">
-  <div>
+  <div style="display:flex;align-items:center;gap:12px">
     <h1>Cohort Analytics Dashboard</h1>
+    <span class="badge">Live BQ</span>
   </div>
-  <span class="badge">Live BQ</span>
+  <div style="text-align:right">
+    <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Last updated</div>
+    <div style="font-size:13px;color:#94a3b8;font-weight:500;margin-top:2px">{UPDATED_AT}</div>
+  </div>
 </div>
 
 <div class="container">
