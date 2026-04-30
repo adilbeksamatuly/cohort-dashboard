@@ -69,6 +69,9 @@ total_gross_rev = sum(
 # ── Cohort Heatmap helpers ────────────────────────────────────────────────────
 MAX_MONTHS = 23
 
+# Minimum % of CAC that must be recovered by each month for Net Revenue Heatmap
+THRESHOLDS = {1: 55, 2: 73, 3: 82, 4: 91, 5: 95, 6: 98}
+
 today = date.today()
 CURRENT_YEAR_MONTH = (today.year, today.month)
 
@@ -336,7 +339,7 @@ def fmt_value(v, is_total):
         return f'${v:.0f}'
     return f'${v:.2f}'
 
-def render_heatmap_table(rows, max_months, is_total=False):
+def render_heatmap_table(rows, max_months, is_total=False, thresholds=None):
     meta_label = rows[0]['meta_label'] if rows else 'CAC'
     out  = '    <div class="heatmap-wrap">\n'
     out += '      <table class="heatmap">\n        <thead><tr>\n'
@@ -344,6 +347,19 @@ def render_heatmap_table(rows, max_months, is_total=False):
     out += '          <th style="border-left:2px solid #475569">Total</th>\n'
     out += ''.join(f'          <th>M{m}</th>\n' for m in range(max_months + 1))
     out += '        </tr></thead>\n        <tbody>\n'
+    if thresholds:
+        out += '        <tr style="background:#1a0808">\n'
+        out += '          <td class="meta" style="color:#ef4444;font-weight:700;background:#1a0808">Min Threshold</td>\n'
+        out += '          <td class="meta" style="background:#1a0808"></td>\n'
+        out += '          <td class="meta" style="background:#1a0808"></td>\n'
+        out += '          <td style="background:#1a0808;border-left:2px solid #475569"></td>\n'
+        for m in range(max_months + 1):
+            t = thresholds.get(m)
+            if t is not None:
+                out += f'          <td style="background:#1a0808;color:#ef4444;font-weight:700">{t}%</td>\n'
+            else:
+                out += '          <td style="background:#1a0808"></td>\n'
+        out += '        </tr>\n'
     for row in rows:
         out += '        <tr>\n'
         out += f'          <td class="meta">{row["cohort"]}</td>\n'
@@ -358,7 +374,7 @@ def render_heatmap_table(rows, max_months, is_total=False):
             out += f'          <td style="background:rgb({tcol});color:{ttxt};border-left:2px solid #475569"><b>{fmt_value(tv, is_total)}</b><br><span class="pct-label">{tpct}%</span></td>\n'
         else:
             out += '          <td style="background:#0f172a;border-left:2px solid #475569">—</td>\n'
-        for cell in row['cells']:
+        for m, cell in enumerate(row['cells']):
             if cell is None:
                 out += '          <td style="background:#0f172a"></td>\n'
                 continue
@@ -366,6 +382,9 @@ def render_heatmap_table(rows, max_months, is_total=False):
             val = cell['value']
             pct = cell['pct']
             txt = '#1e293b' if pct < 60 else '#fff'
+            if thresholds and thresholds.get(m) is not None and pct < thresholds[m]:
+                col = '239,68,68'
+                txt = '#fff'
             if val > 0:
                 out += f'          <td style="background:rgb({col});color:{txt}"><b>{fmt_value(val, is_total)}</b><br><span class="pct-label">{pct}%</span></td>\n'
             else:
@@ -387,8 +406,8 @@ HTML += f"""
 
   <div class="card">
     <h2>Net Revenue Heatmap — Cumulative Net Revenue per User vs CAC</h2>
-    <p class="subtitle">Net revenue (after fees & chargebacks) per acquired user. Color = % of CAC recovered (white → green = 0% → 100%+)</p>
-{render_heatmap_table(heatmap_rows_net, MAX_MONTHS)}  </div>
+    <p class="subtitle">Net revenue (after fees & chargebacks) per acquired user. Color = % of CAC recovered (white → green = 0% → 100%+). Red = below minimum threshold.</p>
+{render_heatmap_table(heatmap_rows_net, MAX_MONTHS, thresholds=THRESHOLDS)}  </div>
 
   <!-- LTV Curves + Payback -->
   <div class="charts-bottom">
