@@ -2,8 +2,9 @@
 import json, os
 from datetime import date
 
-DATA = "/Users/adilbek/Documents/Projects/cohort-dashboard/data"
-OUT  = "/Users/adilbek/Documents/Projects/cohort-dashboard/index.html"
+BASE = os.path.dirname(os.path.abspath(__file__))
+DATA = os.path.join(BASE, "data")
+OUT  = os.path.join(BASE, "index.html")
 
 def load(name):
     with open(f"{DATA}/{name}") as f: return json.load(f)
