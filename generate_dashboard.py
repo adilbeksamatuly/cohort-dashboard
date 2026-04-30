@@ -70,7 +70,7 @@ total_gross_rev = sum(
 MAX_MONTHS = 23
 
 # Minimum % of CAC that must be recovered by each month for Net Revenue Heatmap
-THRESHOLDS = {1: 55, 2: 73, 3: 82, 4: 91, 5: 95, 6: 98}
+THRESHOLDS = {1: 85, 2: 100, 3: 115, 4: 125, 5: 130, 6: 135}
 
 today = date.today()
 CURRENT_YEAR_MONTH = (today.year, today.month)
