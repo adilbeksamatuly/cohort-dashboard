@@ -3,6 +3,7 @@ Fetches data from BigQuery and computes cohort analytics.
 Outputs JSON files consumed by the dashboard.
 """
 import json
+import os
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -10,16 +11,20 @@ import pandas as pd
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
-KEY_PATH = "/Users/adilbek/Documents/Projects/cohort-dashboard/bq_key.json"
-PROJECT   = "hopeful-list-429812-f3"
-DATASET   = "performance_analytics"
-OUT_DIR   = "/Users/adilbek/Documents/Projects/cohort-dashboard/data"
+PROJECT = "hopeful-list-429812-f3"
+DATASET = "performance_analytics"
+OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
-import os
 os.makedirs(OUT_DIR, exist_ok=True)
 
 print("Connecting to BigQuery...")
-creds  = service_account.Credentials.from_service_account_file(KEY_PATH)
+BQ_KEY_JSON = os.environ.get("BQ_KEY_JSON")
+if BQ_KEY_JSON:
+    info = json.loads(BQ_KEY_JSON)
+    creds = service_account.Credentials.from_service_account_info(info)
+else:
+    KEY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bq_key.json")
+    creds = service_account.Credentials.from_service_account_file(KEY_PATH)
 client = bigquery.Client(project=PROJECT, credentials=creds)
 
 # ── 1. Load payments ─────────────────────────────────────────────────────────
