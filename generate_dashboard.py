@@ -174,22 +174,6 @@ def build_heatmap_rows_total_gross(cd):
         })
     return rows
 
-def render_threshold_bar(thresholds):
-    months = sorted(thresholds.keys())
-    out  = '    <div style="overflow-x:auto;margin-bottom:12px">\n'
-    out += '      <table style="border-collapse:collapse;font-size:12px">\n'
-    out += '        <tr>\n'
-    for m in months:
-        out += f'          <th style="padding:6px 14px;color:#94a3b8;font-weight:600;text-align:center;border:1px solid #334155;background:#0f172a">M{m}</th>\n'
-    out += '        </tr>\n'
-    out += '        <tr>\n'
-    for m in months:
-        out += f'          <td style="padding:7px 14px;text-align:center;font-weight:700;color:#ef4444;border:1px solid #334155;background:#1a0808">{thresholds[m]}.00%</td>\n'
-    out += '        </tr>\n'
-    out += '      </table>\n'
-    out += '    </div>\n'
-    return out
-
 heatmap_rows_net         = build_heatmap_rows_cac(cohort_data)
 heatmap_rows_gross       = build_heatmap_rows_gross_per_user(cohort_data_gross)
 heatmap_rows_total_gross = build_heatmap_rows_total_gross(cohort_data_gross)
@@ -362,25 +346,32 @@ def fmt_value(v, is_total):
 
 def render_heatmap_table(rows, max_months, is_total=False, thresholds=None):
     meta_label = rows[0]['meta_label'] if rows else 'CAC'
+    th_bg = '#0f172a'
+    tr_bg = '#162032'  # slightly lighter for threshold row
     out  = '    <div class="heatmap-wrap">\n'
-    out += '      <table class="heatmap">\n        <thead><tr>\n'
+    out += '      <table class="heatmap">\n        <thead>\n'
+    # ── Row 1: column labels ──────────────────────────────────────────────────
+    out += '        <tr>\n'
     out += f'          <th class="left">Cohort</th><th class="left">Users</th><th class="left">{meta_label}</th>\n'
     out += '          <th style="border-left:2px solid #475569">Total</th>\n'
     out += ''.join(f'          <th>M{m}</th>\n' for m in range(max_months + 1))
-    out += '        </tr></thead>\n        <tbody>\n'
+    out += '        </tr>\n'
+    # ── Row 2: threshold row (inside thead so it sticks with headers) ─────────
     if thresholds:
-        out += '        <tr style="background:#1a0808">\n'
-        out += '          <td class="meta" style="color:#ef4444;font-weight:700;background:#1a0808">Min Threshold</td>\n'
-        out += '          <td class="meta" style="background:#1a0808"></td>\n'
-        out += '          <td class="meta" style="background:#1a0808"></td>\n'
-        out += '          <td style="background:#1a0808;border-left:2px solid #475569"></td>\n'
+        S = 'position:sticky;top:33px;z-index:1;'
+        out += '        <tr style="border-top:2px solid #ef4444;border-bottom:2px solid #ef4444">\n'
+        out += f'          <th class="left" style="{S}background:{tr_bg};color:#ef4444;font-size:10px;font-weight:700;letter-spacing:.04em">MIN %</th>\n'
+        out += f'          <th style="{S}background:{tr_bg}"></th>\n'
+        out += f'          <th style="{S}background:{tr_bg}"></th>\n'
+        out += f'          <th style="{S}background:{tr_bg};border-left:2px solid #475569"></th>\n'
         for m in range(max_months + 1):
             t = thresholds.get(m)
             if t is not None:
-                out += f'          <td style="background:#1a0808;color:#ef4444;font-weight:700">{t}%</td>\n'
+                out += f'          <th style="{S}background:{tr_bg};color:#ef4444;font-size:12px;font-weight:700">{t}%</th>\n'
             else:
-                out += '          <td style="background:#1a0808"></td>\n'
+                out += f'          <th style="{S}background:{tr_bg}"></th>\n'
         out += '        </tr>\n'
+    out += '        </thead>\n        <tbody>\n'
     for row in rows:
         out += '        <tr>\n'
         out += f'          <td class="meta">{row["cohort"]}</td>\n'
@@ -427,9 +418,8 @@ HTML += f"""
 
   <div class="card">
     <h2>Net Revenue Heatmap — Cumulative Net Revenue per User vs CAC</h2>
-    <p class="subtitle">Net revenue (after fees & chargebacks) per acquired user. Color = % of CAC recovered (white → green = 0% → 100%+). Red = below minimum threshold.</p>
-    <div style="margin-bottom:4px;font-size:11px;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:.05em">Minimum thresholds</div>
-{render_threshold_bar(THRESHOLDS)}{render_heatmap_table(heatmap_rows_net, MAX_MONTHS, thresholds=THRESHOLDS)}  </div>
+    <p class="subtitle">Net revenue (after fees & chargebacks) per acquired user. Color = % of CAC recovered. <span style="color:#ef4444;font-weight:600">MIN % row</span> = minimum threshold — red cell means below threshold.</p>
+{render_heatmap_table(heatmap_rows_net, MAX_MONTHS, thresholds=THRESHOLDS)}  </div>
 
   <!-- LTV Curves + Payback -->
   <div class="charts-bottom">
