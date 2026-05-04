@@ -174,9 +174,36 @@ def build_heatmap_rows_total_gross(cd):
         })
     return rows
 
+def build_heatmap_rows_total_net(cd):
+    """Total net revenue (all users), color = % of total cohort spend recovered."""
+    spend_map = {r['cohort_month']: r['spend'] for r in cac_data}
+    rows = []
+    for cohort in cd['cohorts']:
+        cum         = cd['cumulative'].get(cohort, {})
+        nu          = new_users.get(cohort, 1)
+        total_spend = spend_map.get(cohort, 0)
+        cells = []
+        for m in range(MAX_MONTHS + 1):
+            if not month_has_occurred(cohort, m):
+                cells.append(None); continue
+            total_rev = round(cum.get(str(m), cum.get(m, 0)), 2)
+            pct       = total_rev / total_spend if total_spend > 0 else 0
+            cells.append({'value': total_rev, 'pct': round(pct * 100), 'color': heat_color(pct)})
+        spend_label  = f'${total_spend/1000:.1f}K' if total_spend >= 1000 else f'${total_spend:.0f}'
+        cohort_total = _last_occurred_value(cum, cohort)
+        cohort_pct   = round(cohort_total / total_spend * 100) if total_spend else 0
+        rows.append({
+            'cohort': cohort, 'users': nu,
+            'meta': spend_label, 'meta_label': 'Total Spend',
+            'total': cohort_total, 'total_pct': cohort_pct,
+            'cells': cells,
+        })
+    return rows
+
 heatmap_rows_net         = build_heatmap_rows_cac(cohort_data)
 heatmap_rows_gross       = build_heatmap_rows_gross_per_user(cohort_data_gross)
 heatmap_rows_total_gross = build_heatmap_rows_total_gross(cohort_data_gross)
+heatmap_rows_total_net   = build_heatmap_rows_total_net(cohort_data)
 
 # ── LTV curves (cumulative revenue per user by cohort) ───────────────────────
 ltv_datasets = []
@@ -410,6 +437,11 @@ HTML += f"""
     <h2>Total Authorized Revenue Heatmap — Cumulative Gross Revenue (All Users) vs Total Spend</h2>
     <p class="subtitle">Total gross revenue from entire cohort. Column = total marketing spend for that cohort. Color = % of spend recovered (white → green = 0% → 100%+)</p>
 {render_heatmap_table(heatmap_rows_total_gross, MAX_MONTHS, is_total=True)}  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <h2>Total Net Revenue Heatmap — Cumulative Net Revenue (All Users) vs Total Spend</h2>
+    <p class="subtitle">Total net revenue (after fees & chargebacks) from entire cohort. Column = total marketing spend for that cohort. Color = % of spend recovered (white → green = 0% → 100%+)</p>
+{render_heatmap_table(heatmap_rows_total_net, MAX_MONTHS, is_total=True)}  </div>
 
   <div class="card" style="margin-bottom:20px">
     <h2>Authorized Revenue Heatmap — Cumulative Gross Revenue per User vs CAC</h2>
