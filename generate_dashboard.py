@@ -371,11 +371,8 @@ HTML = f"""<!DOCTYPE html>
 """
 
 def fmt_value(v, is_total):
-    """Format cell value: totals in K/M, per-user in dollars."""
     if is_total:
-        if v >= 1_000_000: return f'${v/1_000_000:.2f}M'
-        if v >= 1_000:     return f'${v/1_000:.1f}K'
-        return f'${v:.0f}'
+        return f'${v:,.0f}'
     return f'${v:.2f}'
 
 def render_heatmap_table(rows, max_months, is_total=False, thresholds=None):
