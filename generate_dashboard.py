@@ -372,7 +372,7 @@ HTML = f"""<!DOCTYPE html>
 
 def fmt_value(v, is_total):
     if is_total:
-        return f'${v:,.0f}'
+        return f'${v:,.2f}'
     return f'${v:.2f}'
 
 def render_heatmap_table(rows, max_months, is_total=False, thresholds=None):
