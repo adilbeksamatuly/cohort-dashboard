@@ -163,7 +163,7 @@ def build_heatmap_rows_total_gross(cd):
             total_rev = round(cum.get(str(m), cum.get(m, 0)), 2)
             pct       = total_rev / total_spend if total_spend > 0 else 0
             cells.append({'value': total_rev, 'pct': round(pct * 100), 'color': heat_color(pct)})
-        spend_label  = f'${total_spend/1000:.1f}K' if total_spend >= 1000 else f'${total_spend:.0f}'
+        spend_label  = f'${total_spend:,.2f}'
         cohort_total = _last_occurred_value(cum, cohort)   # no /nu → absolute total
         cohort_pct   = round(cohort_total / total_spend * 100) if total_spend else 0
         rows.append({
@@ -189,7 +189,7 @@ def build_heatmap_rows_total_net(cd):
             total_rev = round(cum.get(str(m), cum.get(m, 0)), 2)
             pct       = total_rev / total_spend if total_spend > 0 else 0
             cells.append({'value': total_rev, 'pct': round(pct * 100), 'color': heat_color(pct)})
-        spend_label  = f'${total_spend/1000:.1f}K' if total_spend >= 1000 else f'${total_spend:.0f}'
+        spend_label  = f'${total_spend:,.2f}'
         cohort_total = _last_occurred_value(cum, cohort)
         cohort_pct   = round(cohort_total / total_spend * 100) if total_spend else 0
         rows.append({
@@ -435,22 +435,28 @@ def render_heatmap_table(rows, max_months, is_total=False, thresholds=None):
 HTML += f"""
   <div class="card" style="margin-bottom:20px">
     <h2>Total Authorized Revenue Heatmap — Cumulative Gross Revenue (All Users) vs Total Spend</h2>
-    <p class="subtitle">Total gross revenue from entire cohort. Column = total marketing spend for that cohort. Color = % of spend recovered (white → green = 0% → 100%+)</p>
+    <p class="subtitle">Total gross revenue from entire cohort. Column = total marketing spend for that cohort. Color = % of spend recovered.</p>
 {render_heatmap_table(heatmap_rows_total_gross, MAX_MONTHS, is_total=True)}  </div>
 
   <div class="card" style="margin-bottom:20px">
     <h2>Total Net Revenue Heatmap — Cumulative Net Revenue (All Users) vs Total Spend</h2>
-    <p class="subtitle">Total net revenue (after fees & chargebacks) from entire cohort. Column = total marketing spend for that cohort. Color = % of spend recovered (white → green = 0% → 100%+)</p>
-{render_heatmap_table(heatmap_rows_total_net, MAX_MONTHS, is_total=True)}  </div>
+    <p class="subtitle">Total net revenue (after fees & chargebacks) from entire cohort. Column = total marketing spend for that cohort. Color = % of spend recovered. <span style="color:#ef4444;font-weight:600">MIN % row</span> = minimum threshold.</p>
+{render_heatmap_table(heatmap_rows_total_net, MAX_MONTHS, is_total=True, thresholds=THRESHOLDS)}  </div>
 
-  <div class="card" style="margin-bottom:20px">
-    <h2>Authorized Revenue Heatmap — Cumulative Gross Revenue per User vs CAC</h2>
-    <p class="subtitle">Gross authorized amount per acquired user. Color = % of CAC recovered (white → green = 0% → 100%+)</p>
+  <div class="card" style="margin-bottom:20px;border-left:3px solid #6366f1">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <h2 style="margin-bottom:0">Authorized Revenue Heatmap</h2>
+      <span style="background:#6366f1;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap">PER USER</span>
+    </div>
+    <p class="subtitle">Cumulative gross authorized revenue per acquired user vs CAC. Color = % of CAC recovered.</p>
 {render_heatmap_table(heatmap_rows_gross, MAX_MONTHS)}  </div>
 
-  <div class="card">
-    <h2>Net Revenue Heatmap — Cumulative Net Revenue per User vs CAC</h2>
-    <p class="subtitle">Net revenue (after fees & chargebacks) per acquired user. Color = % of CAC recovered. <span style="color:#ef4444;font-weight:600">MIN % row</span> = minimum threshold — red cell means below threshold.</p>
+  <div class="card" style="border-left:3px solid #6366f1">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <h2 style="margin-bottom:0">Net Revenue Heatmap</h2>
+      <span style="background:#6366f1;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap">PER USER</span>
+    </div>
+    <p class="subtitle">Cumulative net revenue (after fees & chargebacks) per acquired user vs CAC. Color = % of CAC recovered. <span style="color:#ef4444;font-weight:600">MIN % row</span> = minimum threshold — red cell means below threshold.</p>
 {render_heatmap_table(heatmap_rows_net, MAX_MONTHS, thresholds=THRESHOLDS)}  </div>
 
   <!-- LTV Curves + Payback -->

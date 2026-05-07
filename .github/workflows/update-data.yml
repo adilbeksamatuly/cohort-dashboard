@@ -49,3 +49,12 @@ jobs:
           git add data/ index.html
           git diff --staged --quiet || git commit -m "Auto-update data $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: team_QMDKtcW5D4COTfg1fWgqjM0a
+          VERCEL_PROJECT_ID: prj_CKi9dJCuOsP50HMejOPAQrA5BwGw
+        run: |
+          npm install -g vercel
+          vercel --prod --token=$VERCEL_TOKEN --yes
