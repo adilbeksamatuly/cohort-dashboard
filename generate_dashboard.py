@@ -77,7 +77,7 @@ CURRENT_YEAR_MONTH = (today.year, today.month)
 _now_utc    = datetime.now(timezone.utc)
 _now_alm    = _now_utc.astimezone(timezone(timedelta(hours=5)))
 UPDATED_AT_UTC = _now_utc.strftime("%Y-%m-%d %H:%M UTC")
-UPDATED_AT_ALM = _now_alm.strftime("%H:%M Almaty")
+UPDATED_AT_ALM = _now_alm.strftime("%Y-%m-%d %H:%M Almaty")
 
 def month_has_occurred(cohort_str, offset):
     """True if cohort_month + offset months <= current month."""
@@ -304,7 +304,8 @@ HTML = f"""<!DOCTYPE html>
   </div>
   <div style="text-align:right">
     <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Last updated</div>
-    <div style="font-size:13px;color:#94a3b8;font-weight:500;margin-top:2px">{UPDATED_AT_UTC} · {UPDATED_AT_ALM}</div>
+    <div style="font-size:13px;color:#94a3b8;font-weight:500;margin-top:2px">{UPDATED_AT_UTC}</div>
+    <div style="font-size:13px;color:#94a3b8;font-weight:500;margin-top:1px">{UPDATED_AT_ALM}</div>
   </div>
 </div>
 
