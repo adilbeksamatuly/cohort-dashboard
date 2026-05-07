@@ -151,47 +151,24 @@ def build_heatmap_rows_gross_per_user(cd):
         })
     return rows
 
-def build_heatmap_rows_total_gross(cd):
-    """Total gross revenue (all users), color = % of total cohort spend recovered."""
+def _build_total_rows(cd):
+    """Total revenue (all users): cell value = revenue earned in that month only,
+       pct/color = cumulative % of total spend recovered."""
     spend_map = {r['cohort_month']: r['spend'] for r in cac_data}
     rows = []
     for cohort in cd['cohorts']:
         cum         = cd['cumulative'].get(cohort, {})
+        mat         = cd['matrix'].get(cohort, {})
         nu          = new_users.get(cohort, 1)
         total_spend = spend_map.get(cohort, 0)
         cells = []
         for m in range(MAX_MONTHS + 1):
             if not month_has_occurred(cohort, m):
                 cells.append(None); continue
-            total_rev = round(cum.get(str(m), cum.get(m, 0)), 2)
-            pct       = total_rev / total_spend if total_spend > 0 else 0
-            cells.append({'value': total_rev, 'pct': round(pct * 100), 'color': heat_color(pct)})
-        spend_label  = f'${total_spend:,.2f}'
-        cohort_total = _last_occurred_value(cum, cohort)   # no /nu → absolute total
-        cohort_pct   = round(cohort_total / total_spend * 100) if total_spend else 0
-        rows.append({
-            'cohort': cohort, 'users': nu,
-            'meta': spend_label, 'meta_label': 'Total Spend',
-            'total': cohort_total, 'total_pct': cohort_pct,
-            'cells': cells,
-        })
-    return rows
-
-def build_heatmap_rows_total_net(cd):
-    """Total net revenue (all users), color = % of total cohort spend recovered."""
-    spend_map = {r['cohort_month']: r['spend'] for r in cac_data}
-    rows = []
-    for cohort in cd['cohorts']:
-        cum         = cd['cumulative'].get(cohort, {})
-        nu          = new_users.get(cohort, 1)
-        total_spend = spend_map.get(cohort, 0)
-        cells = []
-        for m in range(MAX_MONTHS + 1):
-            if not month_has_occurred(cohort, m):
-                cells.append(None); continue
-            total_rev = round(cum.get(str(m), cum.get(m, 0)), 2)
-            pct       = total_rev / total_spend if total_spend > 0 else 0
-            cells.append({'value': total_rev, 'pct': round(pct * 100), 'color': heat_color(pct)})
+            month_rev = round(mat.get(str(m), mat.get(m, 0)), 2)   # earned this month
+            cum_rev   = round(cum.get(str(m), cum.get(m, 0)), 2)   # cumulative for %
+            pct       = cum_rev / total_spend if total_spend > 0 else 0
+            cells.append({'value': month_rev, 'pct': round(pct * 100), 'color': heat_color(pct)})
         spend_label  = f'${total_spend:,.2f}'
         cohort_total = _last_occurred_value(cum, cohort)
         cohort_pct   = round(cohort_total / total_spend * 100) if total_spend else 0
@@ -202,6 +179,12 @@ def build_heatmap_rows_total_net(cd):
             'cells': cells,
         })
     return rows
+
+def build_heatmap_rows_total_gross(cd):
+    return _build_total_rows(cd)
+
+def build_heatmap_rows_total_net(cd):
+    return _build_total_rows(cd)
 
 heatmap_rows_net         = build_heatmap_rows_cac(cohort_data)
 heatmap_rows_gross       = build_heatmap_rows_gross_per_user(cohort_data_gross)
