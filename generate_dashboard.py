@@ -1,6 +1,6 @@
 """Generates a self-contained index.html dashboard from pre-computed JSON data."""
 import json, os
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timezone, timedelta
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(BASE, "data")
@@ -74,7 +74,10 @@ THRESHOLDS = {0: 55, 1: 73, 2: 82, 3: 91, 4: 95, 5: 98}
 
 today = date.today()
 CURRENT_YEAR_MONTH = (today.year, today.month)
-UPDATED_AT = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+_now_utc    = datetime.now(timezone.utc)
+_now_alm    = _now_utc.astimezone(timezone(timedelta(hours=5)))
+UPDATED_AT_UTC = _now_utc.strftime("%Y-%m-%d %H:%M UTC")
+UPDATED_AT_ALM = _now_alm.strftime("%H:%M Almaty")
 
 def month_has_occurred(cohort_str, offset):
     """True if cohort_month + offset months <= current month."""
@@ -301,7 +304,7 @@ HTML = f"""<!DOCTYPE html>
   </div>
   <div style="text-align:right">
     <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Last updated</div>
-    <div style="font-size:13px;color:#94a3b8;font-weight:500;margin-top:2px">{UPDATED_AT}</div>
+    <div style="font-size:13px;color:#94a3b8;font-weight:500;margin-top:2px">{UPDATED_AT_UTC} · {UPDATED_AT_ALM}</div>
   </div>
 </div>
 
