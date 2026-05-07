@@ -9,33 +9,36 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
-  .header{background:#1e293b;border-bottom:1px solid #334155;padding:16px 20px;display:flex;align-items:center;gap:12px;justify-content:space-between}
-  .header h1{font-size:18px;font-weight:700;color:#f8fafc}
-  .header .badge{background:#3b82f6;color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap}
+  body{font-family:'Inter',sans-serif;background:#0b0c14;color:#e8e9f4;min-height:100vh}
+  .header{background:#13141f;border-bottom:1px solid #252638;padding:16px 20px;display:flex;align-items:center;gap:12px;justify-content:space-between}
+  .header h1{font-size:18px;font-weight:700;color:#f0f1fa}
+  .header .badge{background:#4070d4;color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap}
   .container{max-width:1600px;margin:0 auto;padding:16px 20px}
   .kpi-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:24px}
-  .kpi{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px}
-  .kpi .label{font-size:10px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
-  .kpi .value{font-size:22px;font-weight:700;color:#f8fafc}
-  .kpi .sub{font-size:11px;color:#64748b;margin-top:4px}
+  .kpi{background:#13141f;border:1px solid #252638;border-radius:12px;padding:16px}
+  .kpi .label{font-size:10px;font-weight:600;color:#55566e;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+  .kpi .value{font-size:22px;font-weight:700;color:#f0f1fa}
+  .kpi .sub{font-size:11px;color:#55566e;margin-top:4px}
   .kpi.green .value{color:#22c55e}
-  .kpi.blue  .value{color:#3b82f6}
-  .kpi.amber .value{color:#f59e0b}
+  .kpi.blue  .value{color:#4070d4}
+  .kpi.amber .value{color:#f0be38}
   .charts-row{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
-  .card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px}
-  .card h2{font-size:14px;font-weight:600;color:#f8fafc;margin-bottom:16px}
-  .card .subtitle{font-size:11px;color:#64748b;margin-top:-12px;margin-bottom:16px}
+  .card{background:#13141f;border:1px solid #252638;border-radius:12px;padding:20px}
+  .card h2{font-size:14px;font-weight:600;color:#f0f1fa;margin-bottom:6px}
+  .card .subtitle{font-size:11px;color:#55566e;margin-top:2px;margin-bottom:14px}
+  .card-title-row{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+  .card-title-row h2{margin-bottom:0}
+  .badge-per-user{background:#7b52ab;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
   .chart-wrap{position:relative}
 
   /* Heatmap */
   .heatmap-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
   table.heatmap{border-collapse:collapse;font-size:11px;width:100%}
-  table.heatmap th{background:#0f172a;color:#64748b;font-weight:600;padding:7px 8px;text-align:center;white-space:nowrap;position:sticky;top:0;z-index:1}
+  table.heatmap th{background:#0b0c14;color:#55566e;font-weight:600;padding:7px 8px;text-align:center;white-space:nowrap;position:sticky;top:0;z-index:1}
   table.heatmap th.left{text-align:left}
-  table.heatmap td{padding:5px 6px;text-align:center;border:1px solid #1e293b;min-width:62px}
-  table.heatmap td.meta{text-align:left;color:#94a3b8;white-space:nowrap;font-weight:500;min-width:80px;background:#1e293b;position:sticky;left:0;z-index:1}
-  table.heatmap td.meta span{display:block;font-size:10px;color:#475569}
+  table.heatmap td{padding:5px 6px;text-align:center;border:1px solid #13141f;min-width:62px}
+  table.heatmap td.meta{text-align:left;color:#9090b0;white-space:nowrap;font-weight:500;min-width:80px;background:#13141f;position:sticky;left:0;z-index:1}
+  table.heatmap td.meta span{display:block;font-size:10px;color:#454560}
   .pct-label{font-size:10px;opacity:.8}
   .charts-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
 
@@ -51,7 +54,7 @@
     .charts-row{grid-template-columns:1fr;gap:12px;margin-bottom:12px}
     .charts-bottom{grid-template-columns:1fr;gap:12px}
     .card{padding:14px;border-radius:10px}
-    .card h2{font-size:13px;margin-bottom:12px}
+    .card h2{font-size:13px;margin-bottom:4px}
     .card .subtitle{font-size:10px;margin-bottom:12px}
     table.heatmap{font-size:10px}
     table.heatmap th{padding:5px 6px;font-size:10px}
@@ -75,8 +78,8 @@
   </div>
   <div style="text-align:right">
     <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Last updated</div>
-    <div style="font-size:13px;color:#94a3b8;font-weight:500;margin-top:2px">2026-05-07 06:57 UTC</div>
-    <div style="font-size:13px;color:#94a3b8;font-weight:500;margin-top:1px">2026-05-07 11:57 Almaty</div>
+    <div style="font-size:13px;color:#94a3b8;font-weight:500;margin-top:2px">2026-05-07 07:13 UTC</div>
+    <div style="font-size:13px;color:#94a3b8;font-weight:500;margin-top:1px">2026-05-07 12:13 Almaty</div>
   </div>
 </div>
 
@@ -723,34 +726,34 @@
           <th>M23</th>
         </tr>
         <tr style="border-top:2px solid #ef4444;border-bottom:2px solid #ef4444">
-          <th class="left" style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:10px;font-weight:700;letter-spacing:.04em">MIN %</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;border-left:2px solid #475569"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">55%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">73%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">82%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">91%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">95%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">98%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
+          <th class="left" style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:10px;font-weight:700;letter-spacing:.04em">MIN %</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;border-left:2px solid #475569"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">55%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">73%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">82%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">91%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">95%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">98%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
         </tr>
         </thead>
         <tbody>
@@ -1269,10 +1272,10 @@
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:20px;border-left:3px solid #6366f1">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-      <h2 style="margin-bottom:0">Authorized Revenue Heatmap</h2>
-      <span style="background:#6366f1;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap">PER USER</span>
+  <div class="card" style="margin-bottom:20px;border-left:3px solid #7b52ab">
+    <div class="card-title-row">
+      <h2>Authorized Revenue Heatmap</h2>
+      <span class="badge-per-user">PER USER</span>
     </div>
     <p class="subtitle">Cumulative gross authorized revenue per acquired user vs CAC. Color = % of CAC recovered.</p>
     <div class="heatmap-wrap">
@@ -1823,10 +1826,10 @@
     </div>
   </div>
 
-  <div class="card" style="border-left:3px solid #6366f1">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-      <h2 style="margin-bottom:0">Net Revenue Heatmap</h2>
-      <span style="background:#6366f1;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap">PER USER</span>
+  <div class="card" style="border-left:3px solid #7b52ab">
+    <div class="card-title-row">
+      <h2>Net Revenue Heatmap</h2>
+      <span class="badge-per-user">PER USER</span>
     </div>
     <p class="subtitle">Cumulative net revenue (after fees & chargebacks) per acquired user vs CAC. Color = % of CAC recovered. <span style="color:#ef4444;font-weight:600">MIN % row</span> = minimum threshold — red cell means below threshold.</p>
     <div class="heatmap-wrap">
@@ -1861,34 +1864,34 @@
           <th>M23</th>
         </tr>
         <tr style="border-top:2px solid #ef4444;border-bottom:2px solid #ef4444">
-          <th class="left" style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:10px;font-weight:700;letter-spacing:.04em">MIN %</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;border-left:2px solid #475569"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">55%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">73%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">82%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">91%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">95%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032;color:#ef4444;font-size:12px;font-weight:700">98%</th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
-          <th style="position:sticky;top:33px;z-index:1;background:#162032"></th>
+          <th class="left" style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:10px;font-weight:700;letter-spacing:.04em">MIN %</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;border-left:2px solid #475569"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">55%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">73%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">82%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">91%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">95%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24;color:#ef4444;font-size:12px;font-weight:700">98%</th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
+          <th style="position:sticky;top:33px;z-index:1;background:#1a0f24"></th>
         </tr>
         </thead>
         <tbody>
@@ -2426,7 +2429,7 @@
     <h2>Channel Performance Summary</h2>
     <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px">
       <thead>
-        <tr style="color:#64748b;border-bottom:1px solid #334155">
+        <tr style="color:#55566e;border-bottom:1px solid #252638">
           <th style="text-align:left;padding:10px 0">Channel</th>
           <th style="text-align:right;padding:10px">Revenue</th>
           <th style="text-align:right;padding:10px">Spend</th>
@@ -2436,46 +2439,46 @@
       </thead>
       <tbody>
 
-        <tr style="border-bottom:1px solid #1e293b">
-          <td style="padding:12px 0;font-weight:600;color:#f8fafc">Facebook</td>
+        <tr style="border-bottom:1px solid #13141f">
+          <td style="padding:12px 0;font-weight:600;color:#f0f1fa">Facebook</td>
           <td style="text-align:right;padding:12px">$5.03M</td>
           <td style="text-align:right;padding:12px">$4.51M</td>
-          <td style="text-align:right;padding:12px;color:#f59e0b;font-weight:600">112.0%</td>
+          <td style="text-align:right;padding:12px;color:#f0be38;font-weight:600">112.0%</td>
           <td style="text-align:right;padding:12px">49.0%</td>
         </tr>
-        <tr style="border-bottom:1px solid #1e293b">
-          <td style="padding:12px 0;font-weight:600;color:#f8fafc">Google</td>
+        <tr style="border-bottom:1px solid #13141f">
+          <td style="padding:12px 0;font-weight:600;color:#f0f1fa">Google</td>
           <td style="text-align:right;padding:12px">$4.45M</td>
           <td style="text-align:right;padding:12px">$3.37M</td>
           <td style="text-align:right;padding:12px;color:#22c55e;font-weight:600">132.0%</td>
           <td style="text-align:right;padding:12px">43.3%</td>
         </tr>
-        <tr style="border-bottom:1px solid #1e293b">
-          <td style="padding:12px 0;font-weight:600;color:#f8fafc">Other</td>
+        <tr style="border-bottom:1px solid #13141f">
+          <td style="padding:12px 0;font-weight:600;color:#f0f1fa">Other</td>
           <td style="text-align:right;padding:12px">$0.39M</td>
           <td style="text-align:right;padding:12px">$0.00M</td>
-          <td style="text-align:right;padding:12px;color:#64748b;font-weight:600">0.0%</td>
+          <td style="text-align:right;padding:12px;color:#55566e;font-weight:600">0.0%</td>
           <td style="text-align:right;padding:12px">3.8%</td>
         </tr>
-        <tr style="border-bottom:1px solid #1e293b">
-          <td style="padding:12px 0;font-weight:600;color:#f8fafc">Tiktok</td>
+        <tr style="border-bottom:1px solid #13141f">
+          <td style="padding:12px 0;font-weight:600;color:#f0f1fa">Tiktok</td>
           <td style="text-align:right;padding:12px">$0.29M</td>
           <td style="text-align:right;padding:12px">$0.25M</td>
-          <td style="text-align:right;padding:12px;color:#f59e0b;font-weight:600">119.0%</td>
+          <td style="text-align:right;padding:12px;color:#f0be38;font-weight:600">119.0%</td>
           <td style="text-align:right;padding:12px">2.9%</td>
         </tr>
-        <tr style="border-bottom:1px solid #1e293b">
-          <td style="padding:12px 0;font-weight:600;color:#f8fafc">Unionapps</td>
+        <tr style="border-bottom:1px solid #13141f">
+          <td style="padding:12px 0;font-weight:600;color:#f0f1fa">Unionapps</td>
           <td style="text-align:right;padding:12px">$0.11M</td>
           <td style="text-align:right;padding:12px">$0.00M</td>
-          <td style="text-align:right;padding:12px;color:#64748b;font-weight:600">0.0%</td>
+          <td style="text-align:right;padding:12px;color:#55566e;font-weight:600">0.0%</td>
           <td style="text-align:right;padding:12px">1.1%</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div style="text-align:center;color:#334155;font-size:12px;margin:32px 0 16px">
+  <div style="text-align:center;color:#252638;font-size:12px;margin:32px 0 16px">
     Data sourced from BigQuery · performance_analytics · Updated daily at 00:00 UTC
   </div>
 </div>
@@ -2504,7 +2507,7 @@ new Chart(document.getElementById('revSpendChart'), {
       {
         label: 'Net Revenue',
         data: chartRevenue,
-        backgroundColor: 'rgba(99,102,241,0.8)',
+        backgroundColor: 'rgba(64,112,212,0.8)',
         order: 2,
         yAxisID: 'y',
       },
@@ -2519,7 +2522,7 @@ new Chart(document.getElementById('revSpendChart'), {
         label: 'ROAS',
         data: chartRoas,
         type: 'line',
-        borderColor: '#f59e0b',
+        borderColor: '#f0be38',
         backgroundColor: 'transparent',
         borderWidth: 2,
         pointRadius: 4,
@@ -2531,11 +2534,11 @@ new Chart(document.getElementById('revSpendChart'), {
   options: {
     responsive: true,
     interaction: { mode: 'index', intersect: false },
-    plugins: { legend: { labels: { color: '#94a3b8' } } },
+    plugins: { legend: { labels: { color: '#9090b0' } } },
     scales: {
-      x:  { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
-      y:  { ticks: { color: '#64748b', callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: '#1e293b' }, position: 'left' },
-      y2: { ticks: { color: '#f59e0b', callback: v => v + '%' }, grid: { display: false }, position: 'right' }
+      x:  { ticks: { color: '#55566e' }, grid: { color: '#13141f' } },
+      y:  { ticks: { color: '#55566e', callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: '#13141f' }, position: 'left' },
+      y2: { ticks: { color: '#f0be38', callback: v => v + '%' }, grid: { display: false }, position: 'right' }
     }
   }
 });
@@ -2546,17 +2549,17 @@ new Chart(document.getElementById('channelChart'), {
   data: {
     labels: chLabels,
     datasets: [
-      { label: 'Revenue', data: chRev, backgroundColor: 'rgba(99,102,241,0.8)' },
+      { label: 'Revenue', data: chRev, backgroundColor: 'rgba(64,112,212,0.8)' },
       { label: 'Spend',   data: chSpend, backgroundColor: 'rgba(239,68,68,0.7)' },
     ]
   },
   options: {
     indexAxis: 'y',
     responsive: true,
-    plugins: { legend: { labels: { color: '#94a3b8' } } },
+    plugins: { legend: { labels: { color: '#9090b0' } } },
     scales: {
-      x: { ticks: { color: '#64748b', callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: '#1e293b' } },
-      y: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+      x: { ticks: { color: '#55566e', callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: '#13141f' } },
+      y: { ticks: { color: '#9090b0' }, grid: { display: false } }
     }
   }
 });
@@ -2579,10 +2582,10 @@ new Chart(document.getElementById('ltvChart'), {
   },
   options: {
     responsive: true,
-    plugins: { legend: { labels: { color: '#94a3b8', boxWidth: 12 } } },
+    plugins: { legend: { labels: { color: '#9090b0', boxWidth: 12 } } },
     scales: {
-      x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
-      y: { ticks: { color: '#64748b', callback: v => '$' + v }, grid: { color: '#1e293b' } }
+      x: { ticks: { color: '#55566e' }, grid: { color: '#13141f' } },
+      y: { ticks: { color: '#55566e', callback: v => '$' + v }, grid: { color: '#13141f' } }
     }
   }
 });
@@ -2604,7 +2607,7 @@ new Chart(document.getElementById('paybackChart'), {
         label: 'Payback (months)',
         data: pbPeriods,
         type: 'line',
-        borderColor: '#22c55e',
+        borderColor: '#2ab5ac',
         backgroundColor: 'transparent',
         borderWidth: 2,
         pointRadius: 4,
@@ -2616,11 +2619,11 @@ new Chart(document.getElementById('paybackChart'), {
   options: {
     responsive: true,
     interaction: { mode: 'index', intersect: false },
-    plugins: { legend: { labels: { color: '#94a3b8' } } },
+    plugins: { legend: { labels: { color: '#9090b0' } } },
     scales: {
-      x:  { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
-      y:  { ticks: { color: '#64748b', callback: v => '$' + v }, grid: { color: '#1e293b' }, position: 'left' },
-      y2: { ticks: { color: '#22c55e', callback: v => v + ' mo' }, grid: { display: false }, position: 'right',
+      x:  { ticks: { color: '#55566e' }, grid: { color: '#13141f' } },
+      y:  { ticks: { color: '#55566e', callback: v => '$' + v }, grid: { color: '#13141f' }, position: 'left' },
+      y2: { ticks: { color: '#2ab5ac', callback: v => v + ' mo' }, grid: { display: false }, position: 'right',
               min: 0, max: 6 }
     }
   }

@@ -238,33 +238,36 @@ HTML = f"""<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *{{box-sizing:border-box;margin:0;padding:0}}
-  body{{font-family:'Inter',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}}
-  .header{{background:#1e293b;border-bottom:1px solid #334155;padding:16px 20px;display:flex;align-items:center;gap:12px;justify-content:space-between}}
-  .header h1{{font-size:18px;font-weight:700;color:#f8fafc}}
-  .header .badge{{background:#3b82f6;color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap}}
+  body{{font-family:'Inter',sans-serif;background:#0b0c14;color:#e8e9f4;min-height:100vh}}
+  .header{{background:#13141f;border-bottom:1px solid #252638;padding:16px 20px;display:flex;align-items:center;gap:12px;justify-content:space-between}}
+  .header h1{{font-size:18px;font-weight:700;color:#f0f1fa}}
+  .header .badge{{background:#4070d4;color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap}}
   .container{{max-width:1600px;margin:0 auto;padding:16px 20px}}
   .kpi-grid{{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:24px}}
-  .kpi{{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px}}
-  .kpi .label{{font-size:10px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}}
-  .kpi .value{{font-size:22px;font-weight:700;color:#f8fafc}}
-  .kpi .sub{{font-size:11px;color:#64748b;margin-top:4px}}
+  .kpi{{background:#13141f;border:1px solid #252638;border-radius:12px;padding:16px}}
+  .kpi .label{{font-size:10px;font-weight:600;color:#55566e;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}}
+  .kpi .value{{font-size:22px;font-weight:700;color:#f0f1fa}}
+  .kpi .sub{{font-size:11px;color:#55566e;margin-top:4px}}
   .kpi.green .value{{color:#22c55e}}
-  .kpi.blue  .value{{color:#3b82f6}}
-  .kpi.amber .value{{color:#f59e0b}}
+  .kpi.blue  .value{{color:#4070d4}}
+  .kpi.amber .value{{color:#f0be38}}
   .charts-row{{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}}
-  .card{{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px}}
-  .card h2{{font-size:14px;font-weight:600;color:#f8fafc;margin-bottom:16px}}
-  .card .subtitle{{font-size:11px;color:#64748b;margin-top:-12px;margin-bottom:16px}}
+  .card{{background:#13141f;border:1px solid #252638;border-radius:12px;padding:20px}}
+  .card h2{{font-size:14px;font-weight:600;color:#f0f1fa;margin-bottom:6px}}
+  .card .subtitle{{font-size:11px;color:#55566e;margin-top:2px;margin-bottom:14px}}
+  .card-title-row{{display:flex;align-items:center;gap:10px;margin-bottom:2px}}
+  .card-title-row h2{{margin-bottom:0}}
+  .badge-per-user{{background:#7b52ab;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}}
   .chart-wrap{{position:relative}}
 
   /* Heatmap */
   .heatmap-wrap{{overflow-x:auto;-webkit-overflow-scrolling:touch}}
   table.heatmap{{border-collapse:collapse;font-size:11px;width:100%}}
-  table.heatmap th{{background:#0f172a;color:#64748b;font-weight:600;padding:7px 8px;text-align:center;white-space:nowrap;position:sticky;top:0;z-index:1}}
+  table.heatmap th{{background:#0b0c14;color:#55566e;font-weight:600;padding:7px 8px;text-align:center;white-space:nowrap;position:sticky;top:0;z-index:1}}
   table.heatmap th.left{{text-align:left}}
-  table.heatmap td{{padding:5px 6px;text-align:center;border:1px solid #1e293b;min-width:62px}}
-  table.heatmap td.meta{{text-align:left;color:#94a3b8;white-space:nowrap;font-weight:500;min-width:80px;background:#1e293b;position:sticky;left:0;z-index:1}}
-  table.heatmap td.meta span{{display:block;font-size:10px;color:#475569}}
+  table.heatmap td{{padding:5px 6px;text-align:center;border:1px solid #13141f;min-width:62px}}
+  table.heatmap td.meta{{text-align:left;color:#9090b0;white-space:nowrap;font-weight:500;min-width:80px;background:#13141f;position:sticky;left:0;z-index:1}}
+  table.heatmap td.meta span{{display:block;font-size:10px;color:#454560}}
   .pct-label{{font-size:10px;opacity:.8}}
   .charts-bottom{{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}}
 
@@ -280,7 +283,7 @@ HTML = f"""<!DOCTYPE html>
     .charts-row{{grid-template-columns:1fr;gap:12px;margin-bottom:12px}}
     .charts-bottom{{grid-template-columns:1fr;gap:12px}}
     .card{{padding:14px;border-radius:10px}}
-    .card h2{{font-size:13px;margin-bottom:12px}}
+    .card h2{{font-size:13px;margin-bottom:4px}}
     .card .subtitle{{font-size:10px;margin-bottom:12px}}
     table.heatmap{{font-size:10px}}
     table.heatmap th{{padding:5px 6px;font-size:10px}}
@@ -377,8 +380,8 @@ def fmt_value(v, is_total):
 
 def render_heatmap_table(rows, max_months, is_total=False, thresholds=None):
     meta_label = rows[0]['meta_label'] if rows else 'CAC'
-    th_bg = '#0f172a'
-    tr_bg = '#162032'  # slightly lighter for threshold row
+    th_bg = '#0b0c14'
+    tr_bg = '#1a0f24'  # slightly lighter purple tint for threshold row
     out  = '    <div class="heatmap-wrap">\n'
     out += '      <table class="heatmap">\n        <thead>\n'
     # ── Row 1: column labels ──────────────────────────────────────────────────
@@ -447,18 +450,18 @@ HTML += f"""
     <p class="subtitle">Total net revenue (after fees & chargebacks) from entire cohort. Column = total marketing spend for that cohort. Color = % of spend recovered. <span style="color:#ef4444;font-weight:600">MIN % row</span> = minimum threshold.</p>
 {render_heatmap_table(heatmap_rows_total_net, MAX_MONTHS, is_total=True, thresholds=THRESHOLDS)}  </div>
 
-  <div class="card" style="margin-bottom:20px;border-left:3px solid #6366f1">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-      <h2 style="margin-bottom:0">Authorized Revenue Heatmap</h2>
-      <span style="background:#6366f1;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap">PER USER</span>
+  <div class="card" style="margin-bottom:20px;border-left:3px solid #7b52ab">
+    <div class="card-title-row">
+      <h2>Authorized Revenue Heatmap</h2>
+      <span class="badge-per-user">PER USER</span>
     </div>
     <p class="subtitle">Cumulative gross authorized revenue per acquired user vs CAC. Color = % of CAC recovered.</p>
 {render_heatmap_table(heatmap_rows_gross, MAX_MONTHS)}  </div>
 
-  <div class="card" style="border-left:3px solid #6366f1">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-      <h2 style="margin-bottom:0">Net Revenue Heatmap</h2>
-      <span style="background:#6366f1;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap">PER USER</span>
+  <div class="card" style="border-left:3px solid #7b52ab">
+    <div class="card-title-row">
+      <h2>Net Revenue Heatmap</h2>
+      <span class="badge-per-user">PER USER</span>
     </div>
     <p class="subtitle">Cumulative net revenue (after fees & chargebacks) per acquired user vs CAC. Color = % of CAC recovered. <span style="color:#ef4444;font-weight:600">MIN % row</span> = minimum threshold — red cell means below threshold.</p>
 {render_heatmap_table(heatmap_rows_net, MAX_MONTHS, thresholds=THRESHOLDS)}  </div>
@@ -482,7 +485,7 @@ HTML += f"""
     <h2>Channel Performance Summary</h2>
     <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px">
       <thead>
-        <tr style="color:#64748b;border-bottom:1px solid #334155">
+        <tr style="color:#55566e;border-bottom:1px solid #252638">
           <th style="text-align:left;padding:10px 0">Channel</th>
           <th style="text-align:right;padding:10px">Revenue</th>
           <th style="text-align:right;padding:10px">Spend</th>
@@ -495,11 +498,11 @@ HTML += f"""
 total_rev_all = sum(r['revenue'] for r in load("channel_summary.json"))
 for r in load("channel_summary.json"):
     roas_pct = round(r['roas'] * 100, 1)
-    roas_col = '#22c55e' if r['roas'] > 1.3 else ('#f59e0b' if r['roas'] > 0 else '#64748b')
+    roas_col = '#22c55e' if r['roas'] > 1.3 else ('#f0be38' if r['roas'] > 0 else '#55566e')
     share = round(r['revenue'] / total_rev_all * 100, 1) if total_rev_all else 0
     HTML += f"""
-        <tr style="border-bottom:1px solid #1e293b">
-          <td style="padding:12px 0;font-weight:600;color:#f8fafc">{r['attributed_channel'].capitalize()}</td>
+        <tr style="border-bottom:1px solid #13141f">
+          <td style="padding:12px 0;font-weight:600;color:#f0f1fa">{r['attributed_channel'].capitalize()}</td>
           <td style="text-align:right;padding:12px">${r['revenue']/1e6:.2f}M</td>
           <td style="text-align:right;padding:12px">${r['spend']/1e6:.2f}M</td>
           <td style="text-align:right;padding:12px;color:{roas_col};font-weight:600">{roas_pct}%</td>
@@ -511,7 +514,7 @@ HTML += f"""
     </table>
   </div>
 
-  <div style="text-align:center;color:#334155;font-size:12px;margin:32px 0 16px">
+  <div style="text-align:center;color:#252638;font-size:12px;margin:32px 0 16px">
     Data sourced from BigQuery · performance_analytics · Updated daily at 00:00 UTC
   </div>
 </div>
@@ -540,7 +543,7 @@ new Chart(document.getElementById('revSpendChart'), {{
       {{
         label: 'Net Revenue',
         data: chartRevenue,
-        backgroundColor: 'rgba(99,102,241,0.8)',
+        backgroundColor: 'rgba(64,112,212,0.8)',
         order: 2,
         yAxisID: 'y',
       }},
@@ -555,7 +558,7 @@ new Chart(document.getElementById('revSpendChart'), {{
         label: 'ROAS',
         data: chartRoas,
         type: 'line',
-        borderColor: '#f59e0b',
+        borderColor: '#f0be38',
         backgroundColor: 'transparent',
         borderWidth: 2,
         pointRadius: 4,
@@ -567,11 +570,11 @@ new Chart(document.getElementById('revSpendChart'), {{
   options: {{
     responsive: true,
     interaction: {{ mode: 'index', intersect: false }},
-    plugins: {{ legend: {{ labels: {{ color: '#94a3b8' }} }} }},
+    plugins: {{ legend: {{ labels: {{ color: '#9090b0' }} }} }},
     scales: {{
-      x:  {{ ticks: {{ color: '#64748b' }}, grid: {{ color: '#1e293b' }} }},
-      y:  {{ ticks: {{ color: '#64748b', callback: v => '$' + (v/1000).toFixed(0) + 'K' }}, grid: {{ color: '#1e293b' }}, position: 'left' }},
-      y2: {{ ticks: {{ color: '#f59e0b', callback: v => v + '%' }}, grid: {{ display: false }}, position: 'right' }}
+      x:  {{ ticks: {{ color: '#55566e' }}, grid: {{ color: '#13141f' }} }},
+      y:  {{ ticks: {{ color: '#55566e', callback: v => '$' + (v/1000).toFixed(0) + 'K' }}, grid: {{ color: '#13141f' }}, position: 'left' }},
+      y2: {{ ticks: {{ color: '#f0be38', callback: v => v + '%' }}, grid: {{ display: false }}, position: 'right' }}
     }}
   }}
 }});
@@ -582,17 +585,17 @@ new Chart(document.getElementById('channelChart'), {{
   data: {{
     labels: chLabels,
     datasets: [
-      {{ label: 'Revenue', data: chRev, backgroundColor: 'rgba(99,102,241,0.8)' }},
+      {{ label: 'Revenue', data: chRev, backgroundColor: 'rgba(64,112,212,0.8)' }},
       {{ label: 'Spend',   data: chSpend, backgroundColor: 'rgba(239,68,68,0.7)' }},
     ]
   }},
   options: {{
     indexAxis: 'y',
     responsive: true,
-    plugins: {{ legend: {{ labels: {{ color: '#94a3b8' }} }} }},
+    plugins: {{ legend: {{ labels: {{ color: '#9090b0' }} }} }},
     scales: {{
-      x: {{ ticks: {{ color: '#64748b', callback: v => '$' + (v/1000).toFixed(0) + 'K' }}, grid: {{ color: '#1e293b' }} }},
-      y: {{ ticks: {{ color: '#94a3b8' }}, grid: {{ display: false }} }}
+      x: {{ ticks: {{ color: '#55566e', callback: v => '$' + (v/1000).toFixed(0) + 'K' }}, grid: {{ color: '#13141f' }} }},
+      y: {{ ticks: {{ color: '#9090b0' }}, grid: {{ display: false }} }}
     }}
   }}
 }});
@@ -615,10 +618,10 @@ new Chart(document.getElementById('ltvChart'), {{
   }},
   options: {{
     responsive: true,
-    plugins: {{ legend: {{ labels: {{ color: '#94a3b8', boxWidth: 12 }} }} }},
+    plugins: {{ legend: {{ labels: {{ color: '#9090b0', boxWidth: 12 }} }} }},
     scales: {{
-      x: {{ ticks: {{ color: '#64748b' }}, grid: {{ color: '#1e293b' }} }},
-      y: {{ ticks: {{ color: '#64748b', callback: v => '$' + v }}, grid: {{ color: '#1e293b' }} }}
+      x: {{ ticks: {{ color: '#55566e' }}, grid: {{ color: '#13141f' }} }},
+      y: {{ ticks: {{ color: '#55566e', callback: v => '$' + v }}, grid: {{ color: '#13141f' }} }}
     }}
   }}
 }});
@@ -640,7 +643,7 @@ new Chart(document.getElementById('paybackChart'), {{
         label: 'Payback (months)',
         data: pbPeriods,
         type: 'line',
-        borderColor: '#22c55e',
+        borderColor: '#2ab5ac',
         backgroundColor: 'transparent',
         borderWidth: 2,
         pointRadius: 4,
@@ -652,11 +655,11 @@ new Chart(document.getElementById('paybackChart'), {{
   options: {{
     responsive: true,
     interaction: {{ mode: 'index', intersect: false }},
-    plugins: {{ legend: {{ labels: {{ color: '#94a3b8' }} }} }},
+    plugins: {{ legend: {{ labels: {{ color: '#9090b0' }} }} }},
     scales: {{
-      x:  {{ ticks: {{ color: '#64748b' }}, grid: {{ color: '#1e293b' }} }},
-      y:  {{ ticks: {{ color: '#64748b', callback: v => '$' + v }}, grid: {{ color: '#1e293b' }}, position: 'left' }},
-      y2: {{ ticks: {{ color: '#22c55e', callback: v => v + ' mo' }}, grid: {{ display: false }}, position: 'right',
+      x:  {{ ticks: {{ color: '#55566e' }}, grid: {{ color: '#13141f' }} }},
+      y:  {{ ticks: {{ color: '#55566e', callback: v => '$' + v }}, grid: {{ color: '#13141f' }}, position: 'left' }},
+      y2: {{ ticks: {{ color: '#2ab5ac', callback: v => v + ' mo' }}, grid: {{ display: false }}, position: 'right',
               min: 0, max: 6 }}
     }}
   }}
