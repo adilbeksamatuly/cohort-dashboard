@@ -26,17 +26,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Restore payments cache
-        uses: actions/cache@v4
-        with:
-          path: data/payments_cache.parquet
-          key: payments-cache-${{ github.run_id }}
-          restore-keys: |
-            payments-cache-
-
       - name: Run data pipeline
         env:
           BQ_KEY_JSON: ${{ secrets.BQ_KEY_JSON }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: python data_pipeline.py
 
       - name: Regenerate dashboard
