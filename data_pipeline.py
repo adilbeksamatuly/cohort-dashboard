@@ -2,9 +2,15 @@
 Fetches data from BigQuery and computes cohort analytics.
 Uses Supabase as reliable persistent storage (replaces parquet cache).
 Outputs JSON files consumed by the dashboard.
+
+Usage:
+  python data_pipeline.py               # incremental (default)
+  python data_pipeline.py --full-reload # redownload all BQ rows and overwrite Supabase
 """
 import json
 import os
+import sys
+import time
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -38,9 +44,7 @@ else:
 client = bigquery.Client(project=PROJECT, credentials=creds)
 
 # ── 1. Incremental BQ → Supabase ─────────────────────────────────────────────
-# Strategy: download new rows + 10k overlap from BQ tail using list_rows.
-# UPSERT by order_id safely handles duplicates from the overlap.
-# First run (empty Supabase): downloads everything.
+FULL_RELOAD = "--full-reload" in sys.argv
 
 payments_ref = client.get_table(f"{PROJECT}.{DATASET}.all_payments_daily")
 bq_total     = payments_ref.num_rows
@@ -49,16 +53,19 @@ sb_count     = sb_result.count or 0
 
 print(f"BQ: {bq_total:,} rows | Supabase: {sb_count:,} rows")
 
-OVERLAP  = 10_000  # extra rows to download to absorb BQ row reordering
-start_idx = max(0, sb_count - OVERLAP)
-n_download = bq_total - start_idx
+if FULL_RELOAD:
+    print(f"  Full reload — downloading all {bq_total:,} rows from BQ...")
+    start_idx  = 0
+    n_download = bq_total
+else:
+    OVERLAP    = 10_000
+    start_idx  = max(0, sb_count - OVERLAP)
+    n_download = bq_total - start_idx
 
 if n_download <= 0:
     print("  Supabase up to date.")
 else:
-    if sb_count == 0:
-        print(f"  First run — downloading all {bq_total:,} rows from BQ...")
-    else:
+    if not FULL_RELOAD:
         print(f"  Downloading {n_download:,} rows from BQ (includes {OVERLAP:,}-row overlap)...")
     df_new = client.list_rows(payments_ref, start_index=start_idx, max_results=n_download).to_dataframe()
 
@@ -72,12 +79,23 @@ else:
     # Deduplicate by order_id within the downloaded batch
     df_new = df_new.drop_duplicates(subset=["order_id"], keep="last")
 
-    # Upsert in batches of 500 rows
-    BATCH = 500
+    def upsert_batch(batch, retries=5):
+        for attempt in range(retries):
+            try:
+                sb.table("payments").upsert(batch, on_conflict="order_id").execute()
+                return
+            except Exception as e:
+                if attempt == retries - 1:
+                    raise
+                wait = 2 ** attempt
+                print(f"\n  Timeout, retry {attempt+1}/{retries} in {wait}s...")
+                time.sleep(wait)
+
+    # Upsert in batches of 200 rows with retry on timeout
+    BATCH = 200
     total = len(df_new)
     for i in range(0, total, BATCH):
-        batch = df_new.iloc[i:i+BATCH].to_dict("records")
-        sb.table("payments").upsert(batch, on_conflict="order_id").execute()
+        upsert_batch(df_new.iloc[i:i+BATCH].to_dict("records"))
         print(f"  Upserted {min(i+BATCH, total):,}/{total:,}", end="\r")
     print(f"\n  Supabase updated: ~{sb_count + max(0, bq_total - sb_count):,} rows total")
 
