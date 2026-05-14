@@ -105,7 +105,7 @@ PAGE = 1000
 rows = []
 offset = 0
 while True:
-    res = sb.table("payments").select("*").range(offset, offset + PAGE - 1).execute()
+    res = sb.table("payments").select("*").order("order_id").range(offset, offset + PAGE - 1).execute()
     rows.extend(res.data)
     if len(res.data) < PAGE:
         break
